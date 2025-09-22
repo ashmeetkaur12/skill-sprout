@@ -497,6 +497,7 @@
       if ("speechSynthesis" in window && !speaking) {
         speaking = true;
         const utterance = new SpeechSynthesisUtterance(text);
+        recognition.interimResults = true;
         utterance.rate = 1;
         utterance.lang = "hi-IN";
         utterance.onend = () => {
@@ -642,7 +643,6 @@
 
       if (choice === correct) {
         score++; // increase correct count
-        window.speechSynthesis.cancel();
         speak(`Well done! That's ${correct}!`);
         feedback.textContent = `Well done! That's ${correct}!`;
         feedback.style.color = "#448d2b";
@@ -659,7 +659,7 @@
           loadRound();
         }, 2200);
       } else {
-        window.speechSynthesis.cancel();
+        
         speak(`Try again! That was not ${choice}.`);
         feedback.textContent = "Try again!";
         feedback.style.color = "#e37043";
@@ -706,5 +706,6 @@
   </script>
 </body>
 </html>
+
 
 
