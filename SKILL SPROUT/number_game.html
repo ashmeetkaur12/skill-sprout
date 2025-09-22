@@ -82,6 +82,7 @@
     text-align: center;
     outline: none;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
   }
   #answer:focus {
     border-color: #1f96b1;
@@ -139,15 +140,6 @@
     font-size: 36px !important;
     font-weight: 700;
   }
-  /* bigger font for Correct answer message */
-  .correct-answer {
-    font-size: 28px;
-    font-weight: 600;
-    color: #2f7cc0;
-    margin-top: 15px;
-    min-height: 32px;
-    min-width: 320px;
-  }
 </style>
 </head>
 <body>
@@ -174,7 +166,7 @@
 
 <div id="end-screen" aria-label="End screen">
   <h1>Well done! You rock!</h1>
-  <div id="scorecard-end" aria-live="polite">
+  <div id="scorecard-end" aria-live="polite" style="margin-bottom: 20px;">
     Correct: <span id="end-score-correct">0</span> | Wrong: <span id="end-score-wrong">0</span>
   </div>
   <button id="end-restart-btn" type="button" aria-label="Restart the game">Restart</button>
@@ -285,7 +277,7 @@
     answerInput.disabled = false;
     answerInput.focus();
     feedback.textContent = '';
-    feedback.classList.remove('great-job', 'correct-answer');
+    feedback.classList.remove('great-job');
     updateScorecard();
     speak(currentNumber.toString());
   }
@@ -295,7 +287,6 @@
     const correctAnswer = numberToWords(currentNumber);
     if(normalize(answerInput.value) === normalize(correctAnswer)) {
       feedback.classList.add('great-job');
-      feedback.classList.remove('correct-answer');
       feedback.textContent = 'Great job!';
       speak('Correct!', () => {
         correctCount++;
@@ -303,17 +294,16 @@
         loadNumber();
       });
     } else {
+      feedback.classList.remove('great-job');
       attemptCount++;
       if(attemptCount < maxAttempts) {
-        feedback.classList.add('great-job');
-        feedback.classList.remove('correct-answer');
+        feedback.classList.add('great-job'); // apply bigger font for try again too
         feedback.textContent = 'Try again!';
         speak('Try again!', () => {});
         answerInput.value = '';
         answerInput.focus();
       } else {
         feedback.classList.remove('great-job');
-        feedback.classList.add('correct-answer');
         feedback.textContent = `Incorrect. The correct answer is "${correctAnswer}".`;
         speak(`The correct answer is ${correctAnswer.replace(/-/g,' ')}`, () => {
           wrongCount++;
@@ -334,7 +324,7 @@
   });
   endRestartBtn.addEventListener('click', startGame);
   endQuitBtn.addEventListener('click', () => {
-    window.close(); // or redirect somewhere
+    window.close();
     alert('Thank you for playing!');
   });
 
