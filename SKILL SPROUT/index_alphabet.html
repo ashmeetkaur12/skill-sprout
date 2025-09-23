@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +80,7 @@
     text-align: center;
     border-radius: 8px;
     border: 2px solid #00796b;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
   }
   #feedback {
@@ -93,6 +92,7 @@
   }
   #scorecard {
     font-size: 22px;
+    margin-top: 0;
     margin-bottom: 15px;
   }
   #restart-btn, #quit-btn {
@@ -107,6 +107,9 @@
   #restart-btn {
     background: #00796b;
     display: none;
+    font-size: 28px;
+    padding: 16px 50px;
+    border-radius: 12px;
   }
   #restart-btn:hover {
     background-color: #004d40;
@@ -121,6 +124,18 @@
   }
   #quit-btn:hover {
     background: #b71c1c;
+  }
+
+  .well-done-message {
+    font-weight: 600;
+    font-size: 18px;
+    color: #00796b;
+  }
+  .well-done-scorecard {
+    font-size: 22px;
+    color: #00796b;
+    margin-top: 40px; /* Increased space above scorecard */
+    margin-bottom: 15px;
   }
 </style>
 </head>
@@ -148,39 +163,41 @@
   />
 
   <div id="feedback" role="alert" aria-live="assertive"></div>
+  
   <div id="scorecard" aria-live="polite">Correct: <span id="score-correct">0</span> | Wrong: <span id="score-wrong">0</span></div>
+
   <button id="restart-btn" type="button">Restart</button>
   <button id="quit-btn" type="button">Quit</button>
 </div>
 
 <script>
   const alphabetEntries = [
-    { letter: 'A', word: 'Apple', image: 'apple.png', sound: 'sounds/a_for_apple.mp3' },
-    { letter: 'B', word: 'Ball', image: 'ball.png', sound: 'sounds/b_for_ball.mp3' },
-    { letter: 'C', word: 'Cat', image: 'cat.png', sound: 'sounds/c_for_cat.mp3' },
-    { letter: 'D', word: 'Dog', image: 'dog.png', sound: 'sounds/d_for_dog.mp3' },
-    { letter: 'E', word: 'Elephant', image: 'elephant.png', sound: 'sounds/e_for_elephant.mp3' },
-    { letter: 'F', word: 'Fish', image: 'fish.png', sound: 'sounds/f_for_fish.mp3' },
-    { letter: 'G', word: 'Grapes', image: 'grapes.png', sound: 'sounds/g_for_grapes.mp3' },
-    { letter: 'H', word: 'Heart', image: 'heart.png', sound: 'sounds/h_for_heart.mp3' },
-    { letter: 'I', word: 'Ice cream', image: 'icecream.png', sound: 'sounds/i_for_icecream.mp3' },
-    { letter: 'J', word: 'Jug', image: 'jug.png', sound: 'sounds/j_for_jug.mp3' },
-    { letter: 'K', word: 'Kite', image: 'kite.png', sound: 'sounds/k_for_kite.mp3' },
-    { letter: 'L', word: 'Leaf', image: 'leaf.png', sound: 'sounds/l_for_leaf.mp3' },
-    { letter: 'M', word: 'Mango', image: 'mango.png', sound: 'sounds/m_for_mango.mp3' },
-    { letter: 'N', word: 'Nest', image: 'nest.png', sound: 'sounds/n_for_nest.mp3' },
-    { letter: 'O', word: 'Orange', image: 'orange.png', sound: 'sounds/o_for_orange.mp3' },
-    { letter: 'P', word: 'Pencil', image: 'pencil.png', sound: 'sounds/p_for_penguin.mp3' },
-    { letter: 'Q', word: 'Question', image: 'question.png', sound: 'sounds/q_for_question.mp3' },
-    { letter: 'R', word: 'Rain', image: 'rain.png', sound: 'sounds/r_for_rain.mp3' },
-    { letter: 'S', word: 'Sun', image: 'sun.png', sound: 'sounds/s_for_sun.mp3' },
-    { letter: 'T', word: 'Tree', image: 'tree.png', sound: 'sounds/t_for_tree.mp3' },
-    { letter: 'U', word: 'Umbrella', image: 'umbrella.png', sound: 'sounds/u_for_umbrella.mp3' },
-    { letter: 'V', word: 'Vase', image: 'vase.png', sound: 'sounds/v_for_vase.mp3' },
-    { letter: 'W', word: 'Window', image: 'window.png', sound: 'sounds/w_for_window.mp3' },
-    { letter: 'X', word: 'Xmas', image: 'xmas.png', sound: 'sounds/x_for_xmas.mp3' },
-    { letter: 'Y', word: 'Yolk', image: 'yolk.png', sound: 'sounds/y_for_yolk.mp3' },
-    { letter: 'Z', word: 'Zebra', image: 'zebra.png', sound: 'sounds/z_for_zebra.mp3' },
+    { letter: 'A', word: 'Apple', image: 'images/apple.png', sound: 'sounds/a_for_apple.mp3' },
+    { letter: 'B', word: 'Ball', image: 'images/ball.png', sound: 'sounds/b_for_ball.mp3' },
+    { letter: 'C', word: 'Cat', image: 'images/cat.png', sound: 'sounds/c_for_cat.mp3' },
+    { letter: 'D', word: 'Dog', image: 'images/dog.png', sound: 'sounds/d_for_dog.mp3' },
+    { letter: 'E', word: 'Elephant', image: 'images/elephant.png', sound: 'sounds/e_for_elephant.mp3' },
+    { letter: 'F', word: 'Fish', image: 'images/fish.png', sound: 'sounds/f_for_fish.mp3' },
+    { letter: 'G', word: 'Grapes', image: 'images/grapes.png', sound: 'sounds/g_for_grapes.mp3' },
+    { letter: 'H', word: 'Heart', image: 'images/heart.png', sound: 'sounds/h_for_heart.mp3' },
+    { letter: 'I', word: 'Ice cream', image: 'images/icecream.png', sound: 'sounds/i_for_icecream.mp3' },
+    { letter: 'J', word: 'Jug', image: 'images/jug.png', sound: 'sounds/j_for_jug.mp3' },
+    { letter: 'K', word: 'Kite', image: 'images/kite.png', sound: 'sounds/k_for_kite.mp3' },
+    { letter: 'L', word: 'Leaf', image: 'images/leaf.png', sound: 'sounds/l_for_leaf.mp3' },
+    { letter: 'M', word: 'Mango', image: 'images/mango.png', sound: 'sounds/m_for_mango.mp3' },
+    { letter: 'N', word: 'Nest', image: 'images/nest.png', sound: 'sounds/n_for_nest.mp3' },
+    { letter: 'O', word: 'Orange', image: 'images/orange.png', sound: 'sounds/o_for_orange.mp3' },
+    { letter: 'P', word: 'Pencil', image: 'images/pencil.png', sound: 'sounds/p_for_penguin.mp3' },
+    { letter: 'Q', word: 'Question', image: 'images/question.png', sound: 'sounds/q_for_question.mp3' },
+    { letter: 'R', word: 'Rain', image: 'images/rain.png', sound: 'sounds/r_for_rain.mp3' },
+    { letter: 'S', word: 'Sun', image: 'images/sun.png', sound: 'sounds/s_for_sun.mp3' },
+    { letter: 'T', word: 'Tree', image: 'images/tree.png', sound: 'sounds/t_for_tree.mp3' },
+    { letter: 'U', word: 'Umbrella', image: 'images/umbrella.png', sound: 'sounds/u_for_umbrella.mp3' },
+    { letter: 'V', word: 'Vase', image: 'images/vase.png', sound: 'sounds/v_for_vase.mp3' },
+    { letter: 'W', word: 'Window', image: 'images/window.png', sound: 'sounds/w_for_window.mp3' },
+    { letter: 'X', word: 'Xmas', image: 'images/xmas.png', sound: 'sounds/x_for_xmas.mp3' },
+    { letter: 'Y', word: 'Yolk', image: 'images/yolk.png', sound: 'sounds/y_for_yolk.mp3' },
+    { letter: 'Z', word: 'Zebra', image: 'images/zebra.png', sound: 'sounds/z_for_zebra.mp3' },
   ];
 
   let currentIndex = 0;
@@ -212,7 +229,6 @@
   });
 
   quitBtn.addEventListener('click', () => {
-    // Save scores to localStorage and redirect to score page
     localStorage.setItem('correctCount', correctCount);
     localStorage.setItem('wrongCount', wrongCount);
     window.location.href = 'score_alphabet.html';
@@ -224,7 +240,7 @@
       window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate =1;
+      utterance.rate = 1;
       utterance.pitch = 1.2;
       utterance.lang = 'en-US';
 
@@ -243,8 +259,11 @@
     speak(letter.toLowerCase(), () => {
       setTimeout(() => {
         speak('is for', () => {
+          setTimeout(() => {
+            speak(word);
+          }, 600);
         });
-      }, 400);
+      }, 600);
     });
   }
 
@@ -284,7 +303,7 @@
           imageEl.src = 'images/welldone.png';
           letterEl.textContent = '';
           wordEl.textContent = '';
-          feedbackEl.textContent = "Congratulations! You've learned all the letters! ";
+          feedbackEl.innerHTML = "Congratulations! You've learned all the letters!<br><br>";
           answerInput.style.display = 'none';
           restartBtn.style.display = 'inline-block';
           quitBtn.style.display = 'none';
@@ -309,7 +328,7 @@
             imageEl.src = 'images/welldone.png';
             letterEl.textContent = '';
             wordEl.textContent = '';
-            feedbackEl.textContent = "Congratulations! You've learned all the letters! <br>";
+            feedbackEl.innerHTML = "Congratulations! You've learned all the letters!<br><br>";
             answerInput.style.display = 'none';
             restartBtn.style.display = 'inline-block';
             quitBtn.style.display = 'none';
