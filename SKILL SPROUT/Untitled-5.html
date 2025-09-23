@@ -493,24 +493,22 @@
     const soundCorrect = document.getElementById("sound-correct");
     const soundWrong = document.getElementById("sound-wrong");
 
-    function speak(text, callback) {
+      function speak(text, callback) {
       if ("speechSynthesis" in window && !speaking) {
         speaking = true;
         const utterance = new SpeechSynthesisUtterance(text);
-        recognition.interimResults = true;
-        utterance.rate = 1;
+        utterance.rate =0.95;
         utterance.lang = "hi-IN";
         utterance.onend = () => {
           speaking = false;
-          if (callback) callback();
-        };
+        if (callback) callback();
+       };
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(utterance);
       } else if (callback) {
-        callback();
+       callback();
       }
     }
-
     window.onload = () => {
       showIntroEmotion(introIndex)
       document.getElementById("intro-module").style.display = "";
@@ -706,6 +704,7 @@
   </script>
 </body>
 </html>
+
 
 
 
