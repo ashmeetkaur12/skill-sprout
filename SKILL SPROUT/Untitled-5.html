@@ -417,6 +417,10 @@
       .start-btn {font-size:1.5rem; padding: 13px 34px;}
       .avatars img {width:57px;height:57px;}
     }
+     canvas {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none;
+  }
   </style>
 </head>
 <body>
@@ -440,7 +444,7 @@
         </button>
       </div>
     </section>
-
+<canvas id="canvas"></canvas>
     <section id="game-module" aria-label="Emotion recognition game" style="display:none;">
       <h1>Match the Emotion!</h1>
       <div class="emotion-card" id="game-face-card" style="margin-bottom: 1.5em;">
@@ -490,10 +494,10 @@
     let score = 0;
     let total = 0;
 
-    const soundCorrect = document.getElementById("sound-correct");
-    const soundWrong = document.getElementById("sound-wrong");
+   const soundCorrect = document.getElementById("sound-correct");
+   const soundWrong = document.getElementById("sound-wrong");
 
-      function speak(text, callback) {
+     function speak(text, callback) {
       if ("speechSynthesis" in window && !speaking) {
         speaking = true;
         const utterance = new SpeechSynthesisUtterance(text);
@@ -509,8 +513,9 @@
        callback();
       }
     }
+
     window.onload = () => {
-      showIntroEmotion(introIndex)
+      showIntroEmotion(introIndex);
       document.getElementById("intro-module").style.display = "";
       createEmotionButtons();
     };
@@ -527,6 +532,7 @@
       speak(`This is a ${emotion.answer} face.`, () => {
         emoName.textContent = emotion.answer;
       });
+      
       const nextBtn = document.getElementById("intro-next-btn");
       const startBtn = document.getElementById("start-btn");
       if (idx === EMOTIONS.length - 1) {
@@ -641,12 +647,13 @@
 
       if (choice === correct) {
         score++; // increase correct count
-        speak(`Well done! That's ${correct}!`);
+        launchFireworks();
+       speak(`Well done! That's ${correct}!`);
         feedback.textContent = `Well done! That's ${correct}!`;
         feedback.style.color = "#448d2b";
         faceCard.classList.remove("anim-wrong");
         faceCard.classList.add("anim-correct");
-        soundCorrect.play();
+       soundCorrect.play();
         updateScorecard();
         setTimeout(() => {
           current++;
@@ -657,13 +664,12 @@
           loadRound();
         }, 2200);
       } else {
-        
         speak(`Try again! That was not ${choice}.`);
         feedback.textContent = "Try again!";
         feedback.style.color = "#e37043";
         faceCard.classList.remove("anim-correct");
         faceCard.classList.add("anim-wrong");
-        soundWrong.play();
+       soundWrong.play();
         allowAnswer = true;
         document.querySelectorAll(".emotion-btn").forEach((b) => (b.disabled = false));
         setTimeout(() => {
@@ -701,10 +707,127 @@
     function exitGame() {
       window.location.href = "https://www.google.com"; // Customize exit action
     }
+     const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let cw, ch;
+  function resize() {
+    cw = canvas.width = window.innerWidth;
+    ch = canvas.height = window.innerHeight;
+  }
+  window.onresize = resize;
+  resize();
+
+  class Particle {
+    constructor(x, y, color, angle, speed) {
+      this.x = x;
+      this.y = y;
+      this.color = color;
+      this.angle = angle;
+      this.speed = speed;
+      this.alpha = 1;
+      this.size = 4 + Math.random() * 3;
+      this.decay = 0.015 + Math.random() * 0.015;
+      this.gravity = 0.15;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+    }
+    update() {
+      this.vy += this.gravity;
+      this.x += this.vx;
+      this.y += this.vy;
+      this.alpha -= this.decay;
+    }
+    draw(ctx) {
+      if (this.alpha <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = this.color;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 20;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  class Firework {
+    constructor() {
+      this.x = Math.random() * cw * 0.8 + cw * 0.1;
+      this.y = ch + 10;
+      this.targetY = Math.random() * ch * 0.5 + ch * 0.1;
+      this.speed = 5 + Math.random() * 3;
+      this.isExploded = false;
+      this.particles = [];
+      this.color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 65%)`;
+    }
+    update() {
+      if (!this.isExploded) {
+        this.y -= this.speed;
+        if (this.y <= this.targetY) {
+          this.explode();
+        }
+      } else {
+        this.particles.forEach(p => p.update());
+        this.particles = this.particles.filter(p => p.alpha > 0);
+      }
+    }
+    explode() {
+      this.isExploded = true;
+      const count = 150;
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = Math.random() * 6 + 2;
+        this.particles.push(new Particle(this.x, this.y, this.color, angle, speed));
+      }
+    }
+    draw(ctx) {
+      if (!this.isExploded) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 15;
+        ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      } else {
+        this.particles.forEach(p => p.draw(ctx));
+      }
+    }
+    isDone() {
+      return this.isExploded && this.particles.length === 0;
+    }
+  }
+
+  let fireworks = [];
+  let animationId;
+
+  function animate() {
+    ctx.clearRect(0, 0, cw, ch);
+    fireworks.forEach((fw, i) => {
+      fw.update();
+      fw.draw(ctx);
+      if (fw.isDone()) fireworks.splice(i, 1);
+    });
+    animationId = requestAnimationFrame(animate);
+  }
+
+  function launchFireworks() {
+    fireworks = [];
+    let launchDuration = 1600;
+    const interval = 350;
+    let elapsed = 0;
+    const launchInterval = setInterval(() => {
+      fireworks.push(new Firework());
+      elapsed += interval;
+      if (elapsed >= launchDuration) {
+        clearInterval(launchInterval);
+        setTimeout(() => cancelAnimationFrame(animationId), 2000);
+      }
+    }, interval);
+    animate();
+  }
   </script>
 </body>
 </html>
-
-
-
-
