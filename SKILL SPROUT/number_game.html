@@ -60,14 +60,15 @@
 
   .number-display {
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    font-size: 120px;
+    font-size: 180px;
     font-weight: bold;
     color: #237de4;
     margin-bottom: 10px;
+    line-height: 1.1;
   }
   .number-spelling {
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    font-size: 120px;
+    font-size: 70px;
     color: #237de4;
     margin-bottom: 30px;
     font-weight: 600;
@@ -199,8 +200,6 @@
   function speak(text, callback) {
     if ('speechSynthesis' in window && !speaking) {
       speaking = true;
-      // window.speechSynthesis.cancel();
-
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.7; // slower speed
       utterance.pitch = 1.2;
