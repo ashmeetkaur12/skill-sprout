@@ -67,7 +67,7 @@
   }
   .number-spelling {
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    font-size: 50px;
+    font-size: 70px;
     color: #237de4;
     margin-bottom: 30px;
     font-weight: 600;
@@ -135,7 +135,6 @@
   #end-restart-btn:hover {
     background: #1a5fc4;
   }
-  /* make Great job and Try again bigger */
   .great-job {
     font-size: 36px !important;
     font-weight: 700;
@@ -203,7 +202,7 @@
       // window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1;
+      utterance.rate = 0.7; // slower speed
       utterance.pitch = 1.2;
       utterance.lang = 'en-US';
 
@@ -260,7 +259,6 @@
     intro.style.display = 'none';
     gameContainer.style.display = 'none';
     endScreen.style.display = 'flex';
-    // show final scores
     endScoreCorrect.textContent = correctCount;
     endScoreWrong.textContent = wrongCount;
   }
@@ -283,7 +281,7 @@
   }
 
   function checkAnswer() {
-    if(answerInput.value.trim() === '') return;  // ignore empty
+    if(answerInput.value.trim() === '') return;
     const correctAnswer = numberToWords(currentNumber);
     if(normalize(answerInput.value) === normalize(correctAnswer)) {
       feedback.classList.add('great-job');
@@ -297,7 +295,7 @@
       feedback.classList.remove('great-job');
       attemptCount++;
       if(attemptCount < maxAttempts) {
-        feedback.classList.add('great-job'); // apply bigger font for try again too
+        feedback.classList.add('great-job');
         feedback.textContent = 'Try again!';
         speak('Try again!', () => {});
         answerInput.value = '';
@@ -337,6 +335,5 @@
 
   showIntro();
 </script>
-
 </body>
 </html>
