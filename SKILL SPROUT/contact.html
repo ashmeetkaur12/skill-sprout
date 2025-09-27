@@ -1,0 +1,179 @@
+<section>
+  <h2><center>Contact Us</center></h2>
+  <form class="contact" id="contactForm" method="POST" action="submit_contact.php" onsubmit="return validateContactForm()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="reason">Reason:</label>
+    <select id="reason" name="reason" required>
+      <option value="" disabled selected>Select a reason</option>
+      <option value="general">General Inquiry</option>
+      <option value="support">Support</option>
+      <option value="feedback">Feedback</option>
+      <option value="other">Other</option>
+    </select>
+
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" rows="4" required></textarea>
+
+    <button type="submit">Send</button>
+  </form>
+
+  <style>
+    /* Page background image */
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('file:///C:/Users/LENOVO/Desktop/background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Large white Contact Us heading */
+    section h2 {
+      font-size: 3rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .contact {
+      background: rgba(238, 245, 251, 0.85);
+      padding: 1rem;
+      border-radius: 6px;
+      max-width: 500px;
+      margin: 50px auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      animation: formFadeIn 0.8s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+      animation-fill-mode: forwards;
+    }
+    .contact label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #14464b;
+      animation: fadeSlideIn 0.7s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+      animation-fill-mode: forwards;
+    }
+    .contact input,
+    .contact textarea,
+    .contact select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: box-shadow 0.3s ease;
+      animation: fadeSlideIn 0.7s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+      animation-fill-mode: forwards;
+    }
+    .contact input:focus,
+    .contact textarea:focus,
+    .contact select:focus {
+      box-shadow: 0 0 8px #4a90e2;
+      outline: none;
+    }
+    .contact button {
+      margin-top: 15px;
+      padding: 12px 25px;
+      background: #4a90e2;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      animation: fadeSlideIn 0.9s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+      animation-fill-mode: forwards;
+    }
+    .contact button:hover {
+      background: #357abd;
+      transform: scale(1.05);
+    }
+
+    /* Animations */
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    }
+    @keyframes formFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+    }
+  </style>
+
+  <script>
+    function validateContactForm() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const reason = document.getElementById('reason').value;
+      const message = document.getElementById('message').value.trim();
+
+      if(name.length < 2) {
+        alert('Please enter your name (at least 2 characters).');
+        return false;
+      }
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailPattern.test(email)) {
+        alert('Please enter a valid email address.');
+        return false;
+      }
+      if(!reason) {
+        alert('Please select a reason for contacting us.');
+        return false;
+      }
+      if(message.length < 10) {
+        alert('Please enter a message (at least 10 characters).');
+        return false;
+      }
+      return true;
+    }
+  </script>
+</section>
+
+<?php
+// save this as submit_contact.php or include in your PHP backend handling
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $reason = trim($_POST['reason'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+
+    if (strlen($name) < 2 || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($reason) || strlen($message) < 10) {
+        die("Validation failed, please fill the form correctly.");
+    }
+
+    $to = "support@skillsprouts.com";
+    $subject = "Contact Us Form: " . htmlspecialchars($reason);
+    $body = "Name: $name\nEmail: $email\nReason: $reason\n\nMessage:\n$message\n";
+    $headers = "From: $email";
+
+    // mail($to, $subject, $body, $headers); // Uncomment to send email
+}
+?>
