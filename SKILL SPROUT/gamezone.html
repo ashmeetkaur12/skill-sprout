@@ -55,30 +55,106 @@
             opacity: 0;
             z-index: 0;
         }
+        .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; 
+      background-color: #FFDE59;  /* Light yellow */
+      padding: 5px 15px; /* Reduced padding for a smaller header */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Logo */
+    .navbar .logo img {
+      height: 50px; /* Reduced logo size for a less prominent header */
+      width: 50px;
+      border-radius: 50%; /* Optional: make logo circular */
+    }
+
+    /* Menu links */
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      margin-left: 30px; /* Slightly reduced margin for compactness */
+      margin: 0;
+    }
+
+    .navbar ul li {
+      position: relative;
+      padding: 0 30px; /* Slightly reduced padding between menu items */
+    }
+
+    /* Vertical separator */
+    .navbar ul li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 20px; /* Shorter separator for better look */
+      width: 2px;
+      background-color: black;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: black;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .navbar ul li a:hover {
+      color: #0073e6;
+    }
+
+    .navbar .login-btn {
+      margin-left: auto;
+      margin-right: 30px;
+    }
+
+    .login-btn a {
+      margin-left: auto;
+      background-color: white;
+      color: #f57c00;
+      padding: 8px 16px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .login-btn a:hover {
+      background-color: #FFDE59;
+    }
+    
     </style>
 </head>
 <body>
      <!-- Navbar -->
-  <nav class="navbar">
+ <nav class="navbar">
     <!-- Logo -->
     <div class="logo">
-      <img src="Skill Sprout logo.jpg" alt="Logo" > <!-- Replace with your image path -->
+      <img src="Skill Sprout logo.jpg" alt="Skill Sprout Logo"> <!-- Replace with your actual image path -->
     </div>
 
     <!-- Menu -->
     <ul>
-       <li><a href="index.html"><b>Home</b></a></li>
+      <li><a href="index.html"><b>Home</b></a></li>
       <li><a href="about.html"><b>About Us</b></a></li>
       <li><a href="gamezone.html"><b>Game Zone</b></a></li>
-      <li><a href="#"><b>Analytics</b></a></li>
+      <li><a href="analytics.html"><b>Analytics</b></a></li>
       <li><a href="#"><b>Help</b></a></li>
     </ul>
 
-    <!-- Search Box -->
-    <div class="search-box">
-      <input type="text" placeholder="Search...">
+    <div class="login-btn">
+      <a href="login.html" ><b>Login/Sign Up</b></a>
     </div>
+    <!-- Search Box (uncomment if needed) -->
+    <!-- <div class="search-box">
+      <input type="text" placeholder="Search...">
+    </div> -->
   </nav>
+
     <div class="min-h-screen bg-background p-6">
         <div class="max-w-6xl mx-auto">
             <!-- Banner Section -->
@@ -300,6 +376,7 @@ src="game 1.png"                            alt="Fantasy role-playing game icon 
     </script>
 </body>
 </html>
+
 
 
 
